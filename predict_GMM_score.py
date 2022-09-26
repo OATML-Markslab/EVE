@@ -1,8 +1,4 @@
-from cProfile import label
-from email.policy import default
 import os
-from statistics import quantiles
-from tabnanny import verbose
 import numpy as np
 import pandas as pd
 import argparse
@@ -76,7 +72,7 @@ def filter_uncertainties(all_scores, n_quantiles, default_uc_location, recompute
         level = f'class_ucq_{i}'
         all_scores[level] = all_scores['class'] * (uncertainty < quantile)
         if verbose:
-            print("Stats classification by uncertainty for quantile #:"+str(decile))
+            print("Stats classification by uncertainty for quantile #:"+str(quantile))
             print(all_scores[level].value_counts(normalize=True))
     return all_scores
 
@@ -106,45 +102,33 @@ def main(args):
             'GMM_model_dictionary_'+ \
             args.GMM_parameter_filename_suffix
         with open(gmm_model_location, "rb" ) as fid:
-            dict_models = pickle.load(fid)
-        # Load GMM indices from file
-        gmm_index_location = args.GMM_parameter_location+os.sep+\
-            'GMM_pathogenic_cluster_index_dictionary_'+\
-            args.GMM_parameter_filename_suffix
-        with open(gmm_index_location, "rb" ) as fid:
-            dict_pathogenic_cluster_index = pickle.load(fid)
+            gmm = pickle.load(fid)
 
     else:
         # train GMMs on mutation evolutionary indices
-        gmm_log_location = \
-            args.GMM_parameter_location+os.sep+\
-            args.output_eve_scores_filename_suffix+os.sep+\
-            'GMM_stats_'+args.output_eve_scores_filename_suffix+'.csv'
         gmm_params = {
-            'log_location':gmm_log_location, 
             'protein_GMM_weight':args.protein_GMM_weight
             }
-        gmm = GMM_model.GMM_model(gmm_params)
-        gmm.fit(
+        gmm_model = GMM_model.GMM_model(gmm_params)
+        gmm_model.fit(
             all_evol_indices, 
-            protein_list,
-            verbose=args.verbose
+            protein_list
             )
 
-        # Write GMM models to file
+        # Write GMM models to pickle file
         gmm_model_location = \
             args.GMM_parameter_location+os.sep+\
             'GMM_model_dictionary_'+ \
             args.output_eve_scores_filename_suffix
         with open(gmm_model_location, "wb" ) as fid:
-            pickle.dump(gmm, fid)
+            pickle.dump(gmm_model, fid)
     
     # Compute EVE classification scores for all mutations and write to file
     all_scores = predict_scores_GMM(
+        gmm_model,
         all_evol_indices, 
-        dict_models, 
-        dict_pathogenic_cluster_index,
-        protein_list
+        protein_list,
+        args.recompute_uncertainty_threshold
     )
     all_scores.to_csv(
         args.output_eve_scores_location+os.sep+ \

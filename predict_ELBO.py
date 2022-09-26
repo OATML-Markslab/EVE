@@ -12,6 +12,29 @@ def main(args):
     mapping_file = pd.read_csv(args.MSA_list)
     protein_name = mapping_file['protein_name'][args.protein_index]
     print("Protein name: "+str(protein_name))
+    if args.theta_reweighting is not None:
+        theta = args.theta_reweighting
+    else:
+        try:
+            theta = float(mapping_file['theta'][args.protein_index])
+        except:
+            theta = 0.2
+    print("Theta MSA re-weighting: "+str(theta))
+
+    # Load and preprocess MSA
+    msa_location = \
+        args.MSA_data_folder + os.sep + \
+        mapping_file['msa_location'][args.protein_index]
+    print("MSA file: "+str(msa_location))
+    weights_location = \
+        args.MSA_weights_location + os.sep + \
+        protein_name + '_theta_' + str(theta) + '.npy'
+    data = data_utils.MSA_processing(
+            MSA_location=msa_location,
+            weights_location=weights_location,
+            theta=theta,
+            use_weights=True
+    )
 
     # Load model
     model_name = protein_name + "_" + args.model_name_suffix
@@ -36,29 +59,7 @@ def main(args):
         print("Unable to locate VAE model checkpoint")
         sys.exit(0)
 
-    # Load and preprocess MSA
-    msa_location = \
-        args.MSA_data_folder + os.sep + \
-        mapping_file['msa_location'][args.protein_index]
-    print("MSA file: "+str(msa_location))
-    weights_location = \
-        args.MSA_weights_location + os.sep + \
-        protein_name + '_theta_' + str(theta) + '.npy'
-    if args.theta_reweighting is not None:
-        theta = args.theta_reweighting
-    else:
-        try:
-            theta = float(mapping_file['theta'][args.protein_index])
-        except:
-            theta = 0.2
-    print("Theta MSA re-weighting: "+str(theta))
-    data = data_utils.MSA_processing(
-            MSA_location=msa_location,
-            weights_location=weights_location,
-            theta=theta,
-            use_weights=True
-    )
-    
+
     # Load mutations location
     if args.computation_mode=="all_singles":
         mutations_location = \
