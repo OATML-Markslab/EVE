@@ -13,7 +13,7 @@ export output_evol_indices_location='./results/evol_indices'
 export num_samples_compute_evol_indices=20000
 export batch_size=2048
 
-python compute_evol_indices.py \
+python predict_ELBO.py \
     --MSA_data_folder ${MSA_data_folder} \
     --MSA_list ${MSA_list} \
     --protein_index ${protein_index} \
