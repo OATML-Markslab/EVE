@@ -11,7 +11,7 @@ EVE is a set of protein-specific models providing for any single amino acid muta
 The end to end process to compute EVE scores consists of three consecutive steps:
 1. Train the Bayesian VAE on a re-weighted multiple sequence alignment (MSA) for the protein of interest => train_VAE.py
 2. Compute the evolutionary indices for all single amino acid mutations => compute_evol_indices.py
-3. Train a GMM to cluster variants on the basis of the evol indices then output scores and uncertainties on the class assignments => train_GMM_and_compute_EVE_scores.py
+3. Train a GMM to cluster variants on the basis of the qevol indices then output scores and uncertainties on the class assignments => train_GMM_and_compute_EVE_scores.py
 We also provide all EVE scores for all single amino acid mutations for thousands of proteins at the following address: http://evemodel.org/.
 
 ## Example scripts
@@ -47,6 +47,7 @@ The entire codebase is written in python. Package requirements are as follows:
   - tqdm
   - matplotlib
   - seaborn
+  - numba
 
 The corresponding environment may be created via conda and the provided protein_env.yml file as follows:
 ```

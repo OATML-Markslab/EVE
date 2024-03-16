@@ -14,3 +14,7 @@ dependencies:
   - tqdm
   - matplotlib
   - seaborn
+  - numba==0.54.1
+  - pip
+  - pip:
+    - numba-progress

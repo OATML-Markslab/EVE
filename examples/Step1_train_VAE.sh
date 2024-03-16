@@ -1,3 +1,4 @@
+#! /bin/bash
 export MSA_data_folder='./data/MSA'
 export MSA_list='./data/mappings/example_mapping.csv'
 export MSA_weights_location='./data/weights'
@@ -15,4 +16,6 @@ python train_VAE.py \
     --VAE_checkpoint_location ${VAE_checkpoint_location} \
     --model_name_suffix ${model_name_suffix} \
     --model_parameters_location ${model_parameters_location} \
-    --training_logs_location ${training_logs_location} 
+    --training_logs_location ${training_logs_location} \
+    --batch_size 256  \
+    --experimental_stream_data

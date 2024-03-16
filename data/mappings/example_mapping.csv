@@ -1,2 +1,4 @@
-protein_name,msa_location,theta
+protein_name,MSA_filename,MSA_theta
+YAP1_HUMAN,YAP1_HUMAN_full_11-26-2021_b02.a2m,0.2
 PTEN_HUMAN,PTEN_HUMAN_b1.0.a2m,0.2
+DLG4_RAT,DLG4_RAT_full_11-26-2021_b03.a2m,0.2

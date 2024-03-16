@@ -2,3 +2,13 @@ EVE/__pycache__/
 utils/__pycache__/
 results/VAE_parameters/*
 !results/VAE_parameters/.gitkeep
+logs/
+.idea/
+.ipynb_checkpoints/
+notebooks/
+results/*parameters?*/
+results/evol_indices/
+slurm/
+slurm_dan/
+# Reinclude examples
+!data/mappings/example_mapping.csv
